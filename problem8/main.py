@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+import itertools
+from enum import Enum
+
+from scipy.ndimage.morphology import binary_dilation
+from matplotlib.image import imread, imsave
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import cm
+
 __author__ = 'Moritz Schäfer'
 __email__ = 'mail@moritzs.de'
 __sjtu_student_id = '713030990015'
@@ -9,18 +18,29 @@ Requires python packages: matplotlib, scipy, numpy, pillow, cairocffi
 '''
 
 
-import itertools
-from enum import Enum
+def binary_imread(path, threshold = 1):
+    input_image = imread(path)
+    bw_image = np.zeros(input_image.shape[0:2], dtype=int)
+    for y, row in enumerate(input_image):
+        for x, cell in enumerate(row):
+            try:
+                if sum(cell[0:3]) == 0:
+                    bw_image[y,x] = 0
+                else:
+                    bw_image[y,x] = 1
+            except IndexError:
+                if cell >= threshold:
+                    bw_image[y,x] = 1
+                else:
+                    bw_image[y,x] = 0
 
-from matplotlib.image import imread, imsave
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import cm
+    return bw_image
+
 
 fig = plt.figure(figsize=(8,11), facecolor = 'white')
 
-def draw_img(image, title, pos):
-    ax = fig.add_subplot(3,2, pos)
+def draw_img(image, dim, title, pos):
+    ax = fig.add_subplot(dim[0], dim[1], pos)
     ax.imshow(image, cmap = cm.Greys_r)
     ax.axis('off')
     ax.set_title(title)
@@ -89,24 +109,78 @@ def closing(A, B):
     tmp = apply_mask(A, B, MorphType.dilation)
     return apply_mask(tmp, B, MorphType.erosion)
 
+def boundary(A, B):
+    return np.abs(A - apply_mask(A, B, MorphType.erosion))
+
+def hole_filling(A, B):
+
+    # first find holes
+    tmp_mask = np.logical_not(A)
+    tmp = np.zeros(tmp_mask.shape, bool)
+    output = binary_dilation(tmp, None, -1, tmp_mask, None, 1, 0)
+
+    output = np.logical_not(output).astype('int')
+
+
+    x = apply_mask(apply_mask(output - A, B, MorphType.erosion), B, MorphType.erosion)
+
+
+    old_x = A.copy()
+
+    # now apply algoirthm
+    i = 1
+
+    while (np.sum(np.abs(old_x-x))) != 0: # if there is no change left, break
+        print(i)
+        old_x = x
+        x = apply_mask(x, B, MorphType.dilation)
+        for index, value in np.ndenumerate(A):
+            if value == 1:
+                x[index] = 0
+        i += 1
+        if i >= 9:
+            break
+
+    # add up the original image
+    out_img = A.copy()
+    for index, value in np.ndenumerate(x):
+        if value == 1:
+            out_img[index] = 1
+
+    return out_img
+
+
+def connected_components(A, B):
+    # TAKES LONG!
+    x = np.zeros(A.shape)
+    old_x = A.copy()
+    x[153, 292] = 1
+    x[153, 357] = 1
+    x[153, 396] = 1
+
+    i = 1
+
+    while (np.sum(np.abs(old_x-x))) != 0: # if there is no change left, break
+        print(i)
+        old_x = x
+        x = apply_mask(x, B, MorphType.dilation)
+        for index, value in np.ndenumerate(A):
+            if value == 0:
+                x[index] = 0
+        i += 1
+        if i >= 100:
+            break
+    return x
+
+
+
 def main():
     mask = np.array([
         [0,1,0],
         [1,1,1],
         [0,1,0],
-        #[1,1,1,1,1],
-        #[0,1,1,1,0],
     ])
-    input_image = imread('noisy_fingerprint.tif')
-    bw_image = np.zeros(input_image.shape[0:2], dtype=int)
-    for y, row in enumerate(input_image):
-        for x, cell in enumerate(row):
-            if sum(cell[0:3]) == 0:
-                bw_image[y,x] = 0
-            else:
-                bw_image[y,x] = 1
-
-    imsave('orig.tif', bw_image)
+    bw_image = binary_imread('noisy_fingerprint.tif')
 
     erosed_image = apply_mask(bw_image, mask, MorphType.erosion)
     dilated_image = apply_mask(bw_image, mask, MorphType.dilation)
@@ -114,16 +188,52 @@ def main():
     closed_image = closing(bw_image, mask)
 
 
-    draw_img(bw_image, 'orig', 1)
-    draw_img(erosed_image, 'erosed', 2)
-    draw_img(dilated_image, 'dilated', 3)
-    draw_img(opened_image, 'opened', 4)
-    draw_img(closed_image, 'closed', 5)
+    imsave('orig.tif', bw_image)
+    imsave('erosion.tif', erosed_image)
+    imsave('dilation.tif', dilated_image)
+    imsave('opening.tif', opened_image)
+    imsave('closing.tif', closed_image)
+
+    draw_img(bw_image, (3,2), 'orig', 1)
+    draw_img(erosed_image, (3,2), 'erosed', 2)
+    draw_img(dilated_image, (3,2), 'dilated', 3)
+    draw_img(opened_image, (3,2), 'opened', 4)
+    draw_img(closed_image, (3,2), 'closed', 5)
 
     plt.show()
 
 
 
+    fig.clear()
+    # now task b
+    mask = np.array([
+        [0,1,1,1,0],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [0,1,1,1,0],
+    ])
+    i = 1
+    for image, function in zip(['region_filling_reflections.tif',
+                                'chickenfilet_with_bones.tif',
+                                'licoln_from_penny.tif'],
+                               [hole_filling,
+                                connected_components,
+                                boundary]):
+        if 'chicken' in image:
+            im = binary_imread(image, threshold=195)
+        else:
+            im = binary_imread(image)
+        processed = function(im, mask)
+
+        filename = '{}__{}'.format(function.__name__, image)
+        draw_img(processed, (1,3), filename, i)
+        imsave(filename,
+               processed)
+
+        i += 1
+
+    plt.show()
 
 if __name__ == '__main__':
     main()
