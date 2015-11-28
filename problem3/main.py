@@ -9,7 +9,7 @@ Requires python packages: matplotlib, scipy, numpy, pillow, cairocffi
 '''
 
 
-import cmath
+import cmath, math
 import logging
 import itertools
 
@@ -78,7 +78,7 @@ def fourier(img, inverse = False):
 
     for v,u in itertools.product(range(img.shape[0]), range(img.shape[1])):
         for y,x in itertools.product(range(img.shape[0]), range(img.shape[1])):
-            out[v][u] += complex(img[y][x])*cmath.exp((1j*complex(sign*2*cmath.pi))*complex(v*y/img.shape[0]+u*x/img.shape[1]))
+            out[v][u] += complex(img[y][x])*math.exp((1j*complex(sign*2*cmath.pi))*complex(v*y/img.shape[0]+u*x/img.shape[1]))
 
         if not inverse:
             out[v][u] *= 1/(img.shape[0]*img.shape[1])
@@ -148,8 +148,8 @@ def gaussian_filter(shape, cutoff_frequency):
     return filter_frequency_domain
 
 def highpass_gaussian_filter(shape, cutoff_frequency):
-    return 1-gaussian_filter(shape, cutoff)
-
+    import ipdb; ipdb.set_trace()
+    return 1-gaussian_filter(shape, cutoff_frequency)
 
 
 def center_scale_image(img):
@@ -197,17 +197,18 @@ def transform_and_save(filter_frequency_domain, img_frequency_domain, name):
     # post processing
     filtered_spatial_domain_post_processed = center_scale_image(filtered_spatial_domain).real
 
-    misc.imsave('fourier_filtered_{}.tif'.format(name), filtered_frequency_domain.real, mode=(False, False, True))
+    misc.imsave('fourier_filtered_{}.png'.format(name), filtered_frequency_domain.real, mode=(False, False, True))
 
-    misc.imsave('filter_{}.tif'.format(name), filter_frequency_domain, mode=(True, False, True))
+    misc.imsave('filter_{}.png'.format(name), filter_frequency_domain, mode=(True, False, True))
 
-    misc.imsave('result_{}.tif'.format(name), filtered_spatial_domain_post_processed, mode=(True, False, True))
+    misc.imsave('result_{}.png'.format(name), filtered_spatial_domain_post_processed, mode=(True, False, True))
 
 
 def main():
     # load image. scipy includes standard lena image
     input_image_depth = 256
     input_image = misc.imread('characters_test_pattern.tif')
+    misc.imsave('./characters_test_pattern.png', input_image)
     shape = input_image.shape
 
     # im = input_image
@@ -217,14 +218,13 @@ def main():
     # apply fourier
     img_frequency_domain = fourier(im_scaled_centered)
 
-    misc.imsave('fourier.tif', img_frequency_domain.real)
+    misc.imsave('fourier.png', img_frequency_domain.real)
 
     # Lowpass filters
     for radius in (5,15,30,80,230):
         for filter_function, name in ((ideal_filter, 'lowpass_ideal_{}'), (butterworth_filter, 'lowpass_butterworth_{}'), (gaussian_filter, 'lowpass_gaussian_{}')):
             ideal_filter_frequency_domain = filter_function(shape, radius)
             transform_and_save(ideal_filter_frequency_domain, img_frequency_domain, name.format(radius))
-
 
     # Highpass filters
     for radius in (15, 30, 80):

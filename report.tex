@@ -1,0 +1,392 @@
+\documentclass[a4paper]{scrartcl}
+% Source: http://www.howtotex.com/templates/two-column-journal-article-template/
+
+% SETTINGS BEGIN
+
+%\usepackage{assignment} \usepackage[hmarginratio=1:1,top=25mm,left=25mm]{geometry}
+\usepackage{arydshln}
+
+
+\usepackage{wasysym}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usetikzlibrary{fit,shapes,arrows}
+
+\newcommand{\impldef}[1]{\stackrel{\mathrm{#1}}\Rightarrow}
+\newcommand{\biimpldef}[1]{\stackrel{\mathrm{#1}}\Leftrightarrow}
+\newcommand{\ldot}{\;.\;}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Ps}{\mathcal{P}}
+
+\renewcommand{\labelitemi}{$-$}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\colorlet{light-gray}{gray!20}
+
+
+
+%\assignment{Final work}{Digital image process 2015/16 SJTU}
+%\members{Moritz Schäfer (713030990015)}
+\title{Digital image process 2015/16 SJTU}
+
+\begin{document}
+\maketitle
+
+Please see source code in the corresponding folders: project[1-10]/main.py.
+Exercise 5 and 7 were skipped
+
+Note that I used y,x-corrdinates instead of x,y. That means in all used arrays, the following indexing is used: image[y][x] or image[y,x]. This is recommendend by numpy (the python data processing library).
+
+The code is all written by me. Convenience functions were used for trivial tasks or to avoid repetition from previous tasks only.
+
+This report is not comprehensive as this was not requested. It is rather a convenient way to have a good overview about my work.
+
+\section{Histogram (equalization)}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{problem1/input_image.png}
+  \caption{Original picture}
+\end{figure}
+We see how the original image is very gray.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{problem1/histogram_original_lena.png}
+  \caption{Histogram of original picture}
+\end{figure}
+This is reflected by the histogram. There are no very bright(close 255) or very dark(close 0) values.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{problem1/histogram_equalized_image.png}
+  \caption{Histogram of histogram equalized picture}
+\end{figure}
+Histogram equalizing the image shows this histogram, which has equaly distributed values
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{problem1/histogram_equalize_function.png}
+  \caption{Translation function}
+\end{figure}
+The final image looks like like this: (Please not the darker and brighter colors)
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{problem1/image_histogram_equalized.png}
+  \caption{Transformed image}
+\end{figure}
+
+\section{Image enhancement}
+
+Please note, that everything was implementetd by hand and no convenience functions were used
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/skeleton_orig.png}
+        \caption{Original image}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/b_laplacian_filter_d.png}
+        \caption{Laplacian filter}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/c_laplacian_filter_d_with_original.png}
+        \caption{Laplacian filter + original}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/c2_laplacian_filter_d_with_original.png}
+        \caption{Laplacian filter with original (other way to compute it)}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/d_sobel.png}
+        \caption{Sobel filter}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/e_smoothed_sobel.png}
+        \caption{Smoothed sobel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/f_derivative_1_and_2_multiplied.png}
+        \caption{Multiplication of smoothed sobel and laplacian}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/g_orig_plus_multiplied.png}
+        \caption{Orignal image plus enhancement (multiplied)}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{./problem2/h_g_powerlaw_transformed.png}
+        \caption{Powerlaw transformation of the enhanced image}
+    \end{subfigure}
+
+    \caption{}
+\end{figure}
+
+Please note, that images are shown differently from how they are used as the pixel values have to be transformed to 0-255 to be shown.
+
+
+\section{Filters}
+
+I used the same parameters which were used in the book and got very similar results as in the book.
+For the lowpass filters i used the radii (5,15,30,80,230) and for the highpass filters i used the radii (15, 30, 80).
+
+As these are many result images, please check in folder "problem3" for the full set of result pictures as well as the filters.
+
+See in Figure~\ref{fig:lowpassfilters} a few lowpass filters with different radii. We can clearly see how gaussian has no artifacts and just blures the image with a narrow low pass filter while the other two (ideal and butterworth) make the image bad-looking and even impossible to recognize, adding artifacts and edge repetitions
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_lowpass_gaussian_15.png}
+        \caption{Lowpass gaussian radius 15 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_lowpass_gaussian_80.png}
+        \caption{Lowpass gaussian radius 80 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_lowpass_ideal_15.png}
+        \caption{Lowpass ideal radius 15 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_lowpass_ideal_80.png}
+        \caption{Lowpass ideal radius 80 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_lowpass_butterworth_15.png}
+        \caption{Lowpass butterworth radius 15 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_lowpass_butterworth_80.png}
+        \caption{Lowpass butterworth radius 80 pixel}
+    \end{subfigure}
+
+    \caption{Different lowpass filters}
+    \label{fig:lowpassfilters}
+\end{figure}
+
+
+See in Figure~\ref{fig:highpassfilters} a few Highpass filters with different radii. % TODO compare with somebody
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_highpass_gaussian_15}
+        \caption{Highpass gaussian radius 15 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_highpass_gaussian_80.png}
+        \caption{Highpass gaussian radius 80 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_highpass_ideal_15.png}
+        \caption{Highpass ideal radius 15 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_highpass_ideal_80.png}
+        \caption{Highpass ideal radius 80 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_highpass_butterworth_15.png}
+        \caption{Highpass butterworth radius 15 pixel}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem3/result_highpass_butterworth_80.png}
+        \caption{Highpass butterworth radius 80 pixel}
+    \end{subfigure}
+
+    \caption{Different Highpass filters}
+    \label{fig:highpassfilters}
+\end{figure}
+
+\section{Noises}
+
+I used convenience functions from numpy to generate the different noises, as I need some convenience function anyways (i.e.\ random generator) in order to generate noise. A different approach would have been to generate a set of random numbers and map this set with the reverse of the distribution function of the desired noise.
+
+A lot of images have been created in order to demonstrate the noise and the filtering methods. Here, I will just show a selection of images that demonstrate well the filtering. Please check the problem4 folder to see all images.
+
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem4/Circuit.png}
+        \caption{Original image}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem4/gamma_circuit.png}
+        \caption{Circuit with gamma}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem4/noise_gamma_filter_arithmetic_mean_size_5.png}
+        \caption{Arithmetic 5x5 mean filter}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem4/noise_gamma_filter_arithmetic_mean_size_3.png}
+        \caption{Arithmetic 3x3 mean filter}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem4/noise_gamma_filter_geometric_mean_size_3.png}
+        \caption{Geometric mean filter}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+      \includegraphics[width=\linewidth]{./problem4/noise_gamma_filter_median_size_3.png}
+        \caption{Median Filter}
+    \end{subfigure}
+
+    \caption{Use of different filters on a gamma poluted image}
+    \label{fig:circuitgamma}
+\end{figure}
+
+As we can see in Figure~\ref{fig:circuitgamma}, the mean filters perform better on the gamma noise, than the median filter. We see as well, that the smaller 3x3 filter cancels out the noise quite well, while the 5x5 filter also blures the image more significantly. The geometric filter seems to eliminate the noise while not bluring edges too much.
+
+Another noise along with different filters I want to show is salt and pepper noise:
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem4/impulse_circuit.png}
+    \caption{Salt and Pepper noised image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem4/noise_impulse_filter_median_size_3.png}
+    \caption{Median filtered}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem4/noise_impulse_filter_arithmetic_mean_size_3.png}
+    \caption{Mean filtered}
+  \end{subfigure}
+  \caption{Salt and pepper poluted image filtered with mean and median filter}
+  \label{fig:circuitsaltpepper}
+\end{figure}
+
+In Figure~\ref{fig:circuitsaltpepper} we see, that the median filter performs quite well on the salt and pepper/impulse noise, eleminating most of the noise, whereas the mean filter doesn't perform too well resulting in darkened and lightened areas.
+
+% Please see the other images in folder 'project4' with the following file name scheme: 'noise_{noise_name}_filter_{filter_name}_size_{kernel_size}.png' TODO comment this shit
+
+
+\section{Skipped 1}
+
+\section{Transformations and bilinear interpolation}
+
+I used simple lena sample picture to do the processing. All functions(i.e.\ translate, rotate, scale) where written generically to support different "interpolation" methods (nearest neighbor and bilinear). We can clearly observe how "nearest neigbor" results in angular edges while using bilinear interpolation results in better looking smooth edges (See Figure~\ref{fig:transformations}).
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem6/lena.png}
+    \caption{Original lena}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem6/rotate_nearest.png}
+    \caption{Rotated with nearest neighbor}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem6/rotate_bilinear.png}
+    \caption{Rotate with bilinear interpolation}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem6/combined.png}
+    \caption{scale, translate and rotate with bilinear interpolations. Note the scaling applied after the rotation with bilinear interpolation to see the smoost edges }
+  \end{subfigure}
+  \caption{Different transformations applied to lenna}
+  \label{fig:transformations}
+\end{figure}
+
+\section{Skipped 2}
+
+\section{8}
+
+Erosion and delation are very similar algorithms. So are opening and closing, as they are only combinations of the first two. See Figure~\ref{fig:erosiondelation} to get an overview of the operations.
+See how erosion make lines thinner and in the same time deletes noisy artifacts. Dilation make lines and objects wider and thicker. Opening delete small objects but leaves bigger more or less untouched while closing closes holes. These different behaviours can be well observed in Figure~\ref{fig:erosiondelation}.
+
+\begin{figure}[h]
+  \centering
+  \caption{}
+  \label{fig:erosiondelation}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/orig.png}
+    \caption{Original image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/erosion.png}
+    \caption{Erosed image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/dilation.png}
+    \caption{Dilated image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/opening.png}
+    \caption{Openend image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/closing.png}
+    \caption{Closed image}
+  \end{subfigure}
+\end{figure}
+
+Note: The algorithms from exercise 8 b) where very slow.
+
+For the chickenfilet a manual threshold (195) was used to generate a bivalent image and cancel out unwanted information(meat) and keep interesting one(bone). For hole filling algorithm the positions of the holes are a required information in order to process the algorithm. I copied an algorithm from the internet to detect these holes as I was too lazy to hard code the coordinates of all the circles.
+For connected components the same is the case. I hardcoded three points, one on each bone:
+
+\begin{lstlisting}[frame=single, backgroundcolor=\color{light-gray}, basicstyle=\footnotesize\ttfamily, language=Python, numbers=left, numberstyle=\tiny\color{black},caption= {A desciption of the listing}]
+x[153, 292] = 1
+x[153, 357] = 1
+x[153, 396] = 1
+\end{lstlisting}
+
+See Figure~\ref{fig:morphologicalalgs} to see the well working algorithms.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/licoln_from_penny.png}
+    \caption{Original Lincoln penny}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/region_filling_reflections.png}
+    \caption{Original Region Reflection}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/chickenfilet_with_bones.png}
+    \caption{Original Chickenfilet with bones}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/boundary__licoln_from_penny.png}
+    \caption{Boundary extraction of lincoln}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/hole_filling__region_filling_reflections.png}
+    \caption{Hole filling of Region Reflections}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem8/connected_components__chickenfilet_with_bones.png}
+    \caption{Connected components of Chickenfilet with bones}
+  \end{subfigure}
+  \caption{Different morphological algorithms}
+  \label{fig:morphologicalalgs}
+\end{figure}
+
+\section{9}
+\subsection{b}
+
+Otsu's method is already a global thresholding method. As such there is not way to compare it to "the global thersholding method" as stated in the exercise.
+
+
+\section{10}
+
+With a grid size of 40px the script produced the following output:
+
+moritz@mobook ~/Studium/DIP/Projects/problem10 (master) \$ ./main.py
+Unnormalized chaincode: 1114114414434144443443333332323322221221222112Women grow hair for a reason. Why are we constantly trying to get rid of something Mother Nature clearly intended us to have?
+Unnormalized circular first difference: 3003103013031130003103000003131030003103100301
+
+\end{document}
+
+

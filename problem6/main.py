@@ -119,7 +119,7 @@ def rotate(img, alpha, method):
                                 [-math.sin(alpha), math.cos(alpha)]])
 
     for (y,x), _ in np.ndenumerate(out):
-        indices = np.array([y,x])
+        indices = np.array([y,x], dtype='float64')
         indices += 0.5 # Center image pixels
         rotated = transform_pixel_pos(indices - np.array(img.shape)/2, rotation_matrix)
         new_index = rotated + np.array(img.shape)/2 - 0.5
@@ -171,24 +171,24 @@ def scale(img, new_shape, method='nearest'):
 def main():
     input_image_depth = 256
     input_image = misc.lena()
-    misc.imsave('lena.tif', input_image)
+    misc.imsave('lena.png', input_image)
     shape = input_image.shape
 
     rotated = rotate(input_image, 0.4, 'nearest')
-    misc.imsave('rotate_nearest.tif', rotated)
+    misc.imsave('rotate_nearest.png', rotated)
     rotated = rotate(input_image, 0.4, 'bilinear')
-    misc.imsave('rotate_bilinear.tif', rotated)
+    misc.imsave('rotate_bilinear.png', rotated)
 
     # move by 0.5 pixel with bilinear (note light blurring of image)
     moved = translate(input_image, (0.5,0.5), 'bilinear')
-    misc.imsave('translated_bilinear.tif', moved)
+    misc.imsave('translated_bilinear.png', moved)
 
     # combined
     comb = translate(input_image, (100, 100), 'bilinear')
     comb = translate(comb, (-50, -50), 'nearest')
     comb = rotate(comb, 1, 'bilinear')
-    comb = scale(comb, (1000,1000), 'bilinear')
-    misc.imsave('combined.tif', comb)
+    comb = scale(comb, (400,400), 'bilinear')
+    misc.imsave('combined.png', comb)
 
 if __name__ == '__main__':
     main()

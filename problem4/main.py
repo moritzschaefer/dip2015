@@ -66,6 +66,7 @@ def main():
     # load image. scipy includes standard lena image
     input_image_depth = 256
     circuit = misc.imread('Circuit.tif')
+    misc.imsave('Circuit.png', circuit)
     shape = circuit.shape
 
 
@@ -84,9 +85,9 @@ def main():
 
 
     impulse_noise = np.random.rand(shape[0], shape[1])
-    impulse_noise[impulse_noise < 0.1] = 255
+    impulse_noise[impulse_noise < 0.1] = input_image_depth-1
     impulse_noise[impulse_noise < 0.2] = 0
-    impulse_noise[np.logical_and(impulse_noise >= 0.3, impulse_noise <= 1)] = 128
+    impulse_noise[np.logical_and(impulse_noise >= 0.3, impulse_noise <= 1)] = input_image_depth/2
 
     noises = {'gaussian': gaussian_noise,
               'uniform' : uniform_noise,
@@ -97,12 +98,12 @@ def main():
 
     noised_images = {}
     for noise_name, noise_image in noises.items():
-        misc.imsave('{}_noise.tif'.format(noise_name), noise_image)
+        misc.imsave('{}_noise.png'.format(noise_name), noise_image)
 
         noised = circuit + (noise_image-(input_image_depth/2))/2  # move the mean of the gaussian noise to 0 and half it to reduce its impact on the image
-        noised[noised > 255] = 255
+        noised[noised >= input_image_depth] = input_image_depth-1
         noised[noised < 0] = 0
-        misc.imsave('{}_circuit.tif'.format(noise_name), noised)
+        misc.imsave('{}_circuit.png'.format(noise_name), noised)
         noised_images[noise_name] = noised
 
     # mean filters
@@ -142,8 +143,6 @@ def main():
         except ZeroDivisionError:
             return 0
 
-    # order statistic filters
-
     def median_filter(window):
         return np.nanmedian(window)
         # same as reshaping window to a list, sort the list and taking the element at len(list)/2
@@ -181,10 +180,10 @@ def main():
             for filter_name, filter_func in filters.items():
                 filtered_image = apply_mask(noised_images[noise_name], filter_func, (filter_size,filter_size))
                 try:
-                    misc.imsave('noise_{}_filter_{}_size_{}.tif'.format(noise_name, filter_name, filter_size), filtered_image)
+                    misc.imsave('noise_{}_filter_{}_size_{}.png'.format(noise_name, filter_name, filter_size), filtered_image)
                 except Exception as e:
                     import ipdb; ipdb.set_trace()
-                    logging.error('Could not save noise_{}_filter_{}.tif: {}'.format(noise_name, filter_name, e))
+                    logging.error('Could not save noise_{}_filter_{}.png: {}'.format(noise_name, filter_name, e))
 
 if __name__ == '__main__':
     main()

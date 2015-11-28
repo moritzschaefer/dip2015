@@ -188,11 +188,11 @@ def main():
     closed_image = closing(bw_image, mask)
 
 
-    imsave('orig.tif', bw_image)
-    imsave('erosion.tif', erosed_image)
-    imsave('dilation.tif', dilated_image)
-    imsave('opening.tif', opened_image)
-    imsave('closing.tif', closed_image)
+    imsave('orig.png', bw_image, cmap = cm.Greys_r)
+    imsave('erosion.png', erosed_image, cmap = cm.Greys_r)
+    imsave('dilation.png', dilated_image, cmap = cm.Greys_r)
+    imsave('opening.png', opened_image, cmap = cm.Greys_r)
+    imsave('closing.png', closed_image, cmap = cm.Greys_r)
 
     draw_img(bw_image, (3,2), 'orig', 1)
     draw_img(erosed_image, (3,2), 'erosed', 2)
@@ -224,12 +224,12 @@ def main():
             im = binary_imread(image, threshold=195)
         else:
             im = binary_imread(image)
+        imsave(image[:-3]+'png', im, cmap=cm.Greys_r)
         processed = function(im, mask)
 
-        filename = '{}__{}'.format(function.__name__, image)
+        filename = '{}__{}.png'.format(function.__name__, image[:-4])
         draw_img(processed, (1,3), filename, i)
-        imsave(filename,
-               processed)
+        imsave(filename, processed, cmap = cm.Greys_r)
 
         i += 1
 

@@ -3,3 +3,6 @@
 *.tif
 *.png
 .ropeproject/
+*.aux
+*.log
+__pycache__/

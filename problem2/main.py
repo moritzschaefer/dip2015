@@ -64,6 +64,7 @@ def main():
     # load image. scipy includes standard lena image
     input_image_depth = 256
     input_image = misc.imread('skeleton_orig.tif')
+    misc.imsave('skeleton_orig.png', input_image)
 
     # skeleton_laplacian ( b )
     laplacian_filter_d = np.array([
@@ -73,7 +74,7 @@ def main():
         ])
 
     b_image = apply_mask(input_image, laplacian_filter_d, 256)
-    misc.imsave('b_laplacian_filter_d.tif', b_image)
+    misc.imsave('b_laplacian_filter_d.png', b_image)
 
     # (c) laplacian with original (same as a+b)
     laplacian_filter_d_with_original = np.array([
@@ -82,9 +83,9 @@ def main():
         [-1, -1, -1],
         ])
     c_image = apply_mask(input_image, laplacian_filter_d_with_original, 256)
-    misc.imsave('c_laplacian_filter_d_with_original.tif', c_image)
+    misc.imsave('c_laplacian_filter_d_with_original.png', c_image)
     c_image = input_image+b_image
-    misc.imsave('c2_laplacian_filter_d_with_original.tif', input_image+b_image)
+    misc.imsave('c2_laplacian_filter_d_with_original.png', input_image+b_image)
 
     # (d) sobel image
     g_x_filter = np.array([
@@ -103,7 +104,7 @@ def main():
 
     # for faster computation just use this. d_image is the "derivative" image (not really derivative because the computation with absolutes is not correct for being fast.)
     d_image = np.absolute(g_x) + np.absolute(g_y)
-    misc.imsave('d_sobel.tif', d_image)
+    misc.imsave('d_sobel.png', d_image)
 
     # (e) averaged/smoothed  the sobel image (d))
     averaging_filter = np.array([
@@ -115,26 +116,26 @@ def main():
         ])
 
     e_image = apply_mask(d_image, averaging_filter)
-    misc.imsave('e_smoothed_sobel.tif', e_image)
+    misc.imsave('e_smoothed_sobel.png', e_image)
 
     # (f) multiply (e) and (c)
 
 
     f_image = e_image*c_image/(256)
 
-    misc.imsave('f_derivative_1_and_2_multiplied.tif', f_image.astype(int)) # f_image.astype(int)
+    misc.imsave('f_derivative_1_and_2_multiplied.png', f_image.astype(int)) # f_image.astype(int)
 
     # (g) = (a) + (f)
 
     g_image = f_image+input_image
-    misc.imsave('g_orig_plus_multiplied.tif', g_image)
+    misc.imsave('g_orig_plus_multiplied.png', g_image)
 
     # (h) = power law transformation
-    gamma = 0.5 # values from the book
+    gamma = 0.40 # values from the book
     c = 1.0
 
     h_image = f_image**gamma
-    misc.imsave('h_g_powerlaw_transformed.tif', h_image)
+    misc.imsave('h_g_powerlaw_transformed.png', h_image)
 
 if __name__ == '__main__':
     main()
