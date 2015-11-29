@@ -109,12 +109,9 @@ def find_index(l, value):
 def boundary_following(input_image):
     """ Follows path around image. returns new image with path following as line
 
-    :input_image: TODO
-    :returns: TODO
 
     """
 
-    # TODO: zero pad
     i = np.pad(input_image, 1, mode='constant', constant_values=0)
 
     points = []
@@ -215,11 +212,8 @@ def diffcode(code, circular=True):
 
     return diff
 
-def pca(X):
-    pass
-    # TODO
 
-def main2():
+def main():
     # 10 a)
     input_image = custom_imread('noisy_stroke.tif')
     points = boundary_following(input_image)
@@ -241,7 +235,6 @@ def main2():
     plt.show()
 
 
-def main():
 
     # 10 b)
     image_count = 6

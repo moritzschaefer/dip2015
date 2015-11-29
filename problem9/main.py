@@ -129,6 +129,8 @@ def marrhildreth(A):
                             convoluted[i+1, j-1] >= 0):
                     tmp[i, j] = convoluted[i, j+1]
 
+    tmp[tmp<-800] = -800
+
     return tmp
 
 
@@ -221,7 +223,6 @@ def canny(input_image):
     x135, y135 = np.where(((theta > 112.5)*(theta < 157.5) +
                         (theta > 292.5)*(theta < 337.5)) == True)
 
-    Image.fromarray(theta).convert('L').save('Angle map.jpg')
     theta[x0, y0] = 0
     theta[x45, y45] = 45
     theta[x90, y90] = 90
@@ -284,19 +285,19 @@ def canny(input_image):
 def otsu(A):
     n = 256
     num_pixels = A.shape[0] * A.shape[1]
-    hist = np.histogram[A, n]
+    hist = np.histogram(A, n)
     s = 0
     weight_b = 0
     maximum = 0
     thresholdholds = [0, 0]
-    t_sum = sum(np.multiply(np.array(range(n)), hist.T))
+    t_sum = sum(np.multiply(np.array(range(n)), hist[0]))
     for i in range(n):
-        weight_b = weight_b + hist[i]
+        weight_b = weight_b + hist[0][i]
         if weight_b == 0:
             continue
         if num_pixels - weight_b == 0:
             break
-        s = s + i * hist[i]
+        s = s + i * hist[0][i]
         tmp = (t_sum - s) / (num_pixels - weight_b)
         between = weight_b * (num_pixels - weight_b) * \
             ((s / weight_b) - tmp) * ((s / weight_b) - tmp)
@@ -318,14 +319,14 @@ def main():
     input_image = custom_imread('building.tif')
     input_image2 = custom_imread('polymersomes.tif')
 
+    draw_img(marrhildreth(input_image), (2, 3), 'marrhildreth.png', 4)
     draw_img(canny(input_image), (2, 3), 'canny.png', 5)
-    draw_img(prewitt(input_image), (2, 3), 'prewitted.jpg', 1)
+    draw_img(prewitt(input_image), (2, 3), 'prewitted.png', 1)
     draw_img(sobel(input_image), (2, 3), 'sobel.png', 2)
     draw_img(roberts(input_image), (2, 3), 'roberts.png', 3)
-    draw_img(marrhildreth(input_image), (2, 3), 'marrhildreth.png', 4)
 
     # 9 b)
-    #draw_img(otsu(input_image2), (2, 3), 'otsu.png', 6)
+    draw_img(otsu(input_image2), (2, 3), 'otsu.png', 6)
 
     plt.show()
 

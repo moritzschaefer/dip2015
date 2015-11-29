@@ -69,7 +69,6 @@ def transform_pixel_pos(pos, matrix):
 def interpolate(img, raw_indices, method):
     '''
     Returns new pixel value by interpolating the given pixel position with the given method over the given image
-    TODO
     '''
     if method == 'nearest':
         tmp_ind = np.round(raw_indices-np.finfo(np.float32).eps)
@@ -112,7 +111,6 @@ def rotate(img, alpha, method):
     :param method: Interpolation method. One of nearest and bilinear
     :returns: Rotated image
     '''
-    #TODO: option to resize image to contain everything? just move twice..
 
     out = np.zeros(img.shape)
     rotation_matrix = np.array([[math.cos(alpha), math.sin(alpha)],
@@ -139,7 +137,6 @@ def translate(img, movement_vec, method='nearest'):
     out = np.zeros(np.round(img.shape+np.abs(movement_vec)))
     movement_vec = np.array(movement_vec)
 
-    # TODO: +0.5, -0.5?? use matrix??
     for (y,x), _ in np.ndenumerate(out):
         indices = np.array((y,x))
         new_indices = indices-movement_vec

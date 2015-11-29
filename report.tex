@@ -11,7 +11,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
-
+\usepackage{float}
 \usepackage{stmaryrd}
 \usepackage{tikz}
 \usetikzlibrary{fit,shapes,arrows}
@@ -32,7 +32,7 @@
 
 
 %\assignment{Final work}{Digital image process 2015/16 SJTU}
-%\members{Moritz Schäfer (713030990015)}
+\author{Moritz Schaefer (713030990015)}
 \title{Digital image process 2015/16 SJTU}
 
 \begin{document}
@@ -48,41 +48,42 @@ The code is all written by me. Convenience functions were used for trivial tasks
 This report is not comprehensive as this was not requested. It is rather a convenient way to have a good overview about my work.
 
 \section{Histogram (equalization)}
-\begin{figure}[h]
+
+\begin{figure}[H]
+  \caption{Histogram equalization}
   \centering
-  \includegraphics[width=0.8\linewidth]{problem1/input_image.png}
-  \caption{Original picture}
-\end{figure}
-We see how the original image is very gray.
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\linewidth]{problem1/histogram_original_lena.png}
-  \caption{Histogram of original picture}
-\end{figure}
-This is reflected by the histogram. There are no very bright(close 255) or very dark(close 0) values.
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\linewidth]{problem1/histogram_equalized_image.png}
-  \caption{Histogram of histogram equalized picture}
-\end{figure}
-Histogram equalizing the image shows this histogram, which has equaly distributed values
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\linewidth]{problem1/histogram_equalize_function.png}
-  \caption{Translation function}
-\end{figure}
-The final image looks like like this: (Please not the darker and brighter colors)
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\linewidth]{problem1/image_histogram_equalized.png}
-  \caption{Transformed image}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{problem1/input_image.png}
+    \caption{Original picture}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{problem1/histogram_original_lena.png}
+    \caption{Histogram of original picture}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{problem1/histogram_equalized_image.png}
+    \caption{Histogram of histogram equalized picture}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{problem1/histogram_equalize_function.png}
+    \caption{Translation function}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{problem1/image_histogram_equalized.png}
+    \caption{Transformed image}
+  \end{subfigure}
 \end{figure}
 
+We see how the original image is very gray, which is reflected by the histogram. Histogram equalizing the image shows an histogram, which has equaly distributed values. Note the darker and brighter colors on the final transformed image, as the whole colorspace is used.
 \section{Image enhancement}
 
 Please note, that everything was implementetd by hand and no convenience functions were used
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[t]{0.3\textwidth}
         \includegraphics[width=\linewidth]{./problem2/skeleton_orig.png}
@@ -140,7 +141,7 @@ As these are many result images, please check in folder "problem3" for the full 
 
 See in Figure~\ref{fig:lowpassfilters} a few lowpass filters with different radii. We can clearly see how gaussian has no artifacts and just blures the image with a narrow low pass filter while the other two (ideal and butterworth) make the image bad-looking and even impossible to recognize, adding artifacts and edge repetitions
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
       \includegraphics[width=\linewidth]{./problem3/result_lowpass_gaussian_15.png}
@@ -174,7 +175,7 @@ See in Figure~\ref{fig:lowpassfilters} a few lowpass filters with different radi
 
 See in Figure~\ref{fig:highpassfilters} a few Highpass filters with different radii. % TODO compare with somebody
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
       \includegraphics[width=\linewidth]{./problem3/result_highpass_gaussian_15}
@@ -212,7 +213,7 @@ I used convenience functions from numpy to generate the different noises, as I n
 A lot of images have been created in order to demonstrate the noise and the filtering methods. Here, I will just show a selection of images that demonstrate well the filtering. Please check the problem4 folder to see all images.
 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{subfigure}[t]{0.4\textwidth}
       \includegraphics[width=\linewidth]{./problem4/Circuit.png}
@@ -246,7 +247,7 @@ A lot of images have been created in order to demonstrate the noise and the filt
 As we can see in Figure~\ref{fig:circuitgamma}, the mean filters perform better on the gamma noise, than the median filter. We see as well, that the smaller 3x3 filter cancels out the noise quite well, while the 5x5 filter also blures the image more significantly. The geometric filter seems to eliminate the noise while not bluring edges too much.
 
 Another noise along with different filters I want to show is salt and pepper noise:
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.4\textwidth}
     \includegraphics[width=\linewidth]{./problem4/impulse_circuit.png}
@@ -275,7 +276,7 @@ In Figure~\ref{fig:circuitsaltpepper} we see, that the median filter performs qu
 
 I used simple lena sample picture to do the processing. All functions(i.e.\ translate, rotate, scale) where written generically to support different "interpolation" methods (nearest neighbor and bilinear). We can clearly observe how "nearest neigbor" results in angular edges while using bilinear interpolation results in better looking smooth edges (See Figure~\ref{fig:transformations}).
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.4\textwidth}
     \includegraphics[width=\linewidth]{./problem6/lena.png}
@@ -299,12 +300,12 @@ I used simple lena sample picture to do the processing. All functions(i.e.\ tran
 
 \section{Skipped 2}
 
-\section{8}
+\section{Morphological algorithms}
 
 Erosion and delation are very similar algorithms. So are opening and closing, as they are only combinations of the first two. See Figure~\ref{fig:erosiondelation} to get an overview of the operations.
 See how erosion make lines thinner and in the same time deletes noisy artifacts. Dilation make lines and objects wider and thicker. Opening delete small objects but leaves bigger more or less untouched while closing closes holes. These different behaviours can be well observed in Figure~\ref{fig:erosiondelation}.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \caption{}
   \label{fig:erosiondelation}
@@ -343,7 +344,7 @@ x[153, 396] = 1
 
 See Figure~\ref{fig:morphologicalalgs} to see the well working algorithms.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \begin{subfigure}[t]{0.3\textwidth}
     \includegraphics[width=\linewidth]{./problem8/licoln_from_penny.png}
@@ -373,19 +374,193 @@ See Figure~\ref{fig:morphologicalalgs} to see the well working algorithms.
   \label{fig:morphologicalalgs}
 \end{figure}
 
-\section{9}
-\subsection{b}
+\section{Edge detection}
 
-Otsu's method is already a global thresholding method. As such there is not way to compare it to "the global thersholding method" as stated in the exercise.
+While Roberts, Prewitt and Sobel are rather simple edge detectors using a convolution kernel to detect edges, the Marr-Hildreth and the Canny edge detectors are more elaborated. This is reflected in the images, especially the canny edge detectors finds grain edges. Though the Marr-Hildreth didn't work too well in my implementation. See Figure~\ref{fig:edgedetectors} to see the results. For this input image roberts seems to perform best as canny detects the structure of the building as edges.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/building.png}
+    \caption{Input image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/roberts.png}
+    \caption{Roberts}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/prewitted.png}
+    \caption{Prewitt}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/sobel.png}
+    \caption{Sobel}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/marrhildreth.png}
+    \caption{Marr-Hildreth}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/canny.png}
+    \caption{Canny}
+  \end{subfigure}
+  \caption{Different edge detectors}
+  \label{fig:edgedetectors}
+\end{figure}
+
+\subsection{Otsu thresholding}
+\label{sub:otsu_thresholding}
+
+Otsu's method is already a global thresholding method. As such there is no way to compare it to "the global thresholding method" as stated in the exercise. Otsu's method findest the "best" thrshold for the image. See Figure~\ref{fig:otsu} for the outcome.
 
 
-\section{10}
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/polymersomes.png}
+    \caption{Original image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\textwidth}
+    \includegraphics[width=\linewidth]{./problem9/otsu.png}
+    \caption{Thresholded image with Otsu's threshold}
+  \end{subfigure}
+  \caption{Otsu thresholding}
+  \label{fig:otsu}
+\end{figure}
+
+\section{Image representation and description}
+
+In the example image for the boundary following all noise values are below 255 and the intersting object (the circle to follow) is full 255. This makes it easy to use a threshold to filter out all noise and just consider the intersting boundary object.
+The boundary following algrithm was implemented from the description of the book and is pretty straightforward. So is the chaincode and diffcode.
+What is not straightforward though, is how to resample the boundary path to a wider grid. I came up with the idea to simply apply the following grid rule to every point in the path:
+
+First consider the x value. Having a grid size of 40pixels, is the x value of the given point modulo 40 bigger or smaller than 20 (=40/2)? If it's bigger, the point belongs to the righter edge in the grid, and the modulo value has be subtracted. Else it belongs to the right and '40 minus the modulo value' has to be added.
+The same is done for the y values.
+
+Please see Figure~\ref{fig:boundaryfollowing} for the output pictures as the exctracted boundary and the resampled path used for the chaincode.
 
 With a grid size of 40px the script produced the following output:
 
+\begin{lstlisting}[frame=single, backgroundcolor=\color{light-gray}, basicstyle=\footnotesize\ttfamily, language=Python, numbers=left, numberstyle=\tiny\color{black},caption= {A desciption of the listing}]
 moritz@mobook ~/Studium/DIP/Projects/problem10 (master) \$ ./main.py
-Unnormalized chaincode: 1114114414434144443443333332323322221221222112Women grow hair for a reason. Why are we constantly trying to get rid of something Mother Nature clearly intended us to have?
-Unnormalized circular first difference: 3003103013031130003103000003131030003103100301
+Unnormalized chaincode:
+  1114114414434144443443333332323322221221222112
+Unnormalized circular first difference:
+  3003103013031130003103000003131030003103100301
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \caption{Boundary Following}
+  \label{fig:boundaryfollowing}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/noisy_stroke.png}
+    \caption{Original input image}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/boundary_following.png}
+    \caption{Extracted boundary by following}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/resampled.png}
+    \caption{Resampled boundary}
+  \end{subfigure}
+\end{figure}
+
+For exercice 10b (image PC) as well the algorithms from the book were used. Though, as there was no sufficient description how to generate the eigenvectors, I used a simple singular value decomposition. Figures~\ref{fig:origpic},~\ref{fig:eigenvecs},~\ref{fig:eigentransformed} show the Input images, the computed Eigenvectors and the input images when represented by only two eigenvectors.
+We clearly see in the eigenvectors how the first one is very similar to the input values, as it tries to get all values as good as possible from the inputs. For the second and the others only little more information/variance is available and more the differences of the images than the similarities are reflected.
+Finally we see how well the images can be recovered with as little as two vectors.
+
+
+\begin{figure}[H]
+  \centering
+  \caption{Principal components input images }
+  \label{fig:origpic}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/WashingtonDC_Band1.png}
+    \caption{Input image 1}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/WashingtonDC_Band2.png}
+    \caption{Input image 2}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/WashingtonDC_Band3.png}
+    \caption{Input image 3}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/WashingtonDC_Band4.png}
+    \caption{Input image 4}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/WashingtonDC_Band5.png}
+    \caption{Input image 5}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/WashingtonDC_Band6.png}
+    \caption{Input image 6}
+  \end{subfigure}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \caption{Eigenvectors of the input images}
+  \label{fig:eigenvecs}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/eigenvec_1.png}
+    \caption{Eigenvector 1}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/eigenvec_2.png}
+    \caption{Eigenvector 2}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/eigenvec_3.png}
+    \caption{Eigenvector 3}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/eigenvec_4.png}
+    \caption{Eigenvector 4}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/eigenvec_5.png}
+    \caption{Eigenvector 5}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/eigenvec_6.png}
+    \caption{Eigenvector 6}
+  \end{subfigure}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \caption{Recovered input images using two eigenvectors}
+  \label{fig:eigentransformed}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/transformed_1.png}
+    \caption{Recovered from input image 1}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/transformed_2.png}
+    \caption{Recovered from input image 2}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/transformed_3.png}
+    \caption{Recovered from input image 3}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/transformed_4.png}
+    \caption{Recovered from input image 4}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/transformed_5.png}
+    \caption{Recovered from input image 5}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \includegraphics[width=\linewidth]{./problem10/transformed_6.png}
+    \caption{Recovered from input image 6}
+  \end{subfigure}
+\end{figure}
 
 \end{document}
 

@@ -8,7 +8,6 @@ __sjtu_student_id = '713030990015'
 Requires python packages: matplotlib, scipy, numpy, pillow, cairocffi
 '''
 
-# TODO: scale some stuff (see book)...
 
 import math
 import logging

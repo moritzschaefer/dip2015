@@ -135,7 +135,7 @@ def scale_from_one(img, color_depth):
     :param color_depth: Number of colors
     '''
     tmp = img.copy()
-    tmp = np.abs(tmp) # TODO is this good??
+    tmp = np.abs(tmp)
     return tmp
 
 

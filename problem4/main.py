@@ -71,9 +71,9 @@ def main():
 
 
 
-    # TODO: for a full list of noises refer to the slides!!
+    # for a full list of noises refer to the slides!!
     # generate noise just by getting "a lot of"(shape) gaussian/uniform distributed random variables
-    gaussian_noise = np.random.normal(input_image_depth/2, input_image_depth/3, shape)  # first parameter is mean, second is standard deviation and third parameter is number of values to return # TODO why 2?
+    gaussian_noise = np.random.normal(input_image_depth/2, input_image_depth/3, shape)  # first parameter is mean, second is standard deviation and third parameter is number of values to return
     uniform_noise = np.random.normal(0, input_image_depth, shape) # first param
 
     rayleigh_mode = np.sqrt(2 / np.pi) * input_image_depth/2

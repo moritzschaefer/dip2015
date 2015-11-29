@@ -117,7 +117,6 @@ def highpass_ideal_filter(shape,radius):
 def butterworth_filter(shape, cutoff_frequency, order = 2):
     '''
     Returns butterworth lowpass filter(image) according to given parameters
-    TODO: params here
     '''
     filter_frequency_domain = np.zeros(shape)
     for v,u in itertools.product(range(shape[0]), range(shape[1])):
@@ -128,7 +127,6 @@ def butterworth_filter(shape, cutoff_frequency, order = 2):
 def highpass_butterworth_filter(shape, cutoff_frequency, order=2):
     '''
     Returns butterworth lowpass filter(image) according to given parameters
-    TODO: params here
     '''
     filter_frequency_domain = np.zeros(shape)
     for v,u in itertools.product(range(shape[0]), range(shape[1])):
@@ -139,7 +137,6 @@ def highpass_butterworth_filter(shape, cutoff_frequency, order=2):
 def gaussian_filter(shape, cutoff_frequency):
     '''
     Returns butterworth lowpass filter(image) according to given parameters
-    TODO: params here
     '''
     filter_frequency_domain = np.zeros(shape)
     for v,u in itertools.product(range(shape[0]), range(shape[1])):
@@ -176,7 +173,7 @@ def scale_from_one(img, color_depth):
     :param color_depth: Number of colors
     '''
     tmp = img.copy()
-    tmp = np.abs(tmp) # TODO is this good??
+    tmp = np.abs(tmp)
     return tmp
 
 
